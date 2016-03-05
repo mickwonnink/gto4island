@@ -110,6 +110,7 @@ public class gameHandler : MonoBehaviour
                     verticleDistance = startRenderer.bounds.size.z / 1.35f;
                     islandPart.transform.position += new Vector3(horizontalDistance * -0.5f, 0, 0);
                     islandPart.transform.SetParent(IslandParts.transform);
+                    Instantiate((GameObject)Resources.Load("Prefabs/testPrefabs/Civilian") as GameObject, new Vector3(islandPart.transform.position.x, islandPart.transform.position.y + 0.2f, islandPart.transform.position.z), Quaternion.identity);
                 }
                 else
                 {
