@@ -40,7 +40,6 @@ public class gameHandler : MonoBehaviour
     Dictionary<string, PlayerInfo> Players = new Dictionary<string, PlayerInfo>();
 
 
-
     //distance between island parts
     GameObject startIsland = null;
     float horizontalDistance = 40;
@@ -59,11 +58,18 @@ public class gameHandler : MonoBehaviour
     int currentPlayer = 1; //player number of player that needs to play his turn.
 
 
-
+    GameObject testIslandToWalkTo = null;
+    GameObject testBuilder = null;
 
     // Use this for initialization
     void Start()
     {
+
+        GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        plane.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 0);
+        plane.transform.localScale *= 4;
+        plane.transform.position = new Vector3(0, 0.2f, 0);
+        plane.GetComponent<Renderer>().material.shader = Shader.Find("Transparent/Diffuse");
 
         if (Application.platform == RuntimePlatform.Android)
         {
@@ -110,7 +116,7 @@ public class gameHandler : MonoBehaviour
                     verticleDistance = startRenderer.bounds.size.z / 1.35f;
                     islandPart.transform.position += new Vector3(horizontalDistance * -0.5f, 0, 0);
                     islandPart.transform.SetParent(IslandParts.transform);
-                    Instantiate((GameObject)Resources.Load("Prefabs/testPrefabs/Civilian") as GameObject, new Vector3(islandPart.transform.position.x, islandPart.transform.position.y + 0.2f, islandPart.transform.position.z), Quaternion.identity);
+                    testBuilder = (GameObject)Instantiate((GameObject)Resources.Load("Prefabs/testPrefabs/Civilian") as GameObject, new Vector3(islandPart.transform.position.x, islandPart.transform.position.y + 1f, islandPart.transform.position.z), Quaternion.identity);
                 }
                 else
                 {
@@ -123,6 +129,7 @@ public class gameHandler : MonoBehaviour
                         Vector3 spawnPosition = new Vector3(-(horizontalDistance * i), 0, linenumber * verticleDistance);
                         GameObject islandPart = (GameObject)Instantiate(rdnIsland, spawnPosition, rdnRotationQ);
                         islandPart.transform.SetParent(IslandParts.transform);
+                        testIslandToWalkTo = islandPart;
                     }
                     else //even
                     {
@@ -136,6 +143,44 @@ public class gameHandler : MonoBehaviour
             linenumber++;
         }
 
+        StartCoroutine(TryoutBuilderWalk());
+    }
+
+    float startTime = 0;
+    float speed = 0.05f;
+    float journeyLength = 0;
+    bool walking = false;
+    Vector3 builderStartPos = new Vector3();
+
+    IEnumerator TryoutBuilderWalk()
+    {
+        if (!walking) {
+            startTime = Time.time;
+            journeyLength = Vector3.Distance(testBuilder.transform.position, testIslandToWalkTo.transform.position);
+            builderStartPos = testBuilder.transform.position;
+            walking = true;
+
+        }
+        yield return new WaitForSeconds(0.1f);
+
+            float distCovered = (Time.time - startTime) * speed;
+            float fracJourney = distCovered / journeyLength;
+            Vector3 newBpos = Vector3.Lerp(builderStartPos, testIslandToWalkTo.transform.position, fracJourney);
+
+
+            Vector3 down = testBuilder.transform.TransformDirection(Vector3.down);
+            //Debug.DrawRay(testBuilder.transform.position, down * 50, Color.green);
+            RaycastHit objectHit = new RaycastHit();
+            if (Physics.Raycast(testBuilder.transform.position, down, out objectHit))
+            {
+                testBuilder.transform.position = new Vector3(newBpos.x, objectHit.point.y + 0.01f, newBpos.z);
+        }
+
+            if (fracJourney < 1)
+        {
+            testBuilder.transform.up = testBuilder.GetComponent<Rigidbody>().velocity;
+            StartCoroutine(TryoutBuilderWalk());
+        }
     }
 
     bool expanded = false;
