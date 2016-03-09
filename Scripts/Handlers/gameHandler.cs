@@ -45,6 +45,8 @@ public class gameHandler : MonoBehaviour
     float horizontalDistance = 40;
     float verticleDistance = 35;
 
+    List<GameObject> AllIslandParts;
+
     //settings
     float maxViewSize = 50;
     float minViewSize = 10;
@@ -64,6 +66,7 @@ public class gameHandler : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        AllIslandParts = new List<GameObject>();
 
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         plane.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 0);
@@ -117,6 +120,7 @@ public class gameHandler : MonoBehaviour
                     islandPart.transform.position += new Vector3(horizontalDistance * -0.5f, 0, 0);
                     islandPart.transform.SetParent(IslandParts.transform);
                     testBuilder = (GameObject)Instantiate((GameObject)Resources.Load("Prefabs/testPrefabs/Civilian") as GameObject, new Vector3(islandPart.transform.position.x, islandPart.transform.position.y + 1f, islandPart.transform.position.z), Quaternion.identity);
+                    AllIslandParts.Add(islandPart);
                 }
                 else
                 {
@@ -129,6 +133,9 @@ public class gameHandler : MonoBehaviour
                         Vector3 spawnPosition = new Vector3(-(horizontalDistance * i), 0, linenumber * verticleDistance);
                         GameObject islandPart = (GameObject)Instantiate(rdnIsland, spawnPosition, rdnRotationQ);
                         islandPart.transform.SetParent(IslandParts.transform);
+                        AllIslandParts.Add(islandPart);
+                        //TODO REMOVE
+                        if  (i == 2)
                         testIslandToWalkTo = islandPart;
                     }
                     else //even
@@ -136,6 +143,7 @@ public class gameHandler : MonoBehaviour
                         Vector3 spawnPosition = new Vector3(-(horizontalDistance * 0.5f) - (horizontalDistance * i), 0, linenumber * verticleDistance);
                         GameObject islandPart = (GameObject)Instantiate(rdnIsland, spawnPosition, rdnRotationQ);
                         islandPart.transform.SetParent(IslandParts.transform);
+                        AllIslandParts.Add(islandPart);
                     }
                 }
 
@@ -147,10 +155,16 @@ public class gameHandler : MonoBehaviour
     }
 
     float startTime = 0;
-    float speed = 0.05f;
+    float speed = 1f;
     float journeyLength = 0;
     bool walking = false;
     Vector3 builderStartPos = new Vector3();
+
+    public Transform Target;
+    public float RotationSpeed = 1;
+
+    private Quaternion _lookRotation;
+    private Vector3 _direction;
 
     IEnumerator TryoutBuilderWalk()
     {
@@ -158,10 +172,21 @@ public class gameHandler : MonoBehaviour
             startTime = Time.time;
             journeyLength = Vector3.Distance(testBuilder.transform.position, testIslandToWalkTo.transform.position);
             builderStartPos = testBuilder.transform.position;
+
+            //find the vector pointing from our position to the target
+            _direction = (testIslandToWalkTo.transform.position - builderStartPos).normalized;
+
+            //create the rotation we need to be in to look at the target
+            _lookRotation = Quaternion.LookRotation(_direction);
+
+            //rotate us over time according to speed until we are in the required rotation
+            testBuilder.transform.rotation = _lookRotation;
+            testBuilder.GetComponent<Animator>().SetBool("isWalking", true);
+
             walking = true;
 
         }
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.01f);
 
             float distCovered = (Time.time - startTime) * speed;
             float fracJourney = distCovered / journeyLength;
@@ -178,7 +203,14 @@ public class gameHandler : MonoBehaviour
 
             if (fracJourney < 1)
         {
-            testBuilder.transform.up = testBuilder.GetComponent<Rigidbody>().velocity;
+            StartCoroutine(TryoutBuilderWalk());
+        }
+        else
+        {
+            testBuilder.GetComponent<Animator>().SetBool("isWalking", false);
+            builderStartPos = testBuilder.transform.position;
+            testIslandToWalkTo = AllIslandParts[Random.Range(0, AllIslandParts.Count)];
+            startTime = Time.time;
             StartCoroutine(TryoutBuilderWalk());
         }
     }
