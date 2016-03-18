@@ -63,6 +63,8 @@ public class gameHandler : MonoBehaviour
     GameObject testIslandToWalkTo = null;
     GameObject testBuilder = null;
 
+    List<Point> islandCoords = new List<Point>();
+
     // Use this for initialization
     void Start()
     {
@@ -71,7 +73,7 @@ public class gameHandler : MonoBehaviour
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         plane.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 0);
         plane.transform.localScale *= 4;
-        plane.transform.position = new Vector3(0, 0.2f, 0);
+        plane.transform.position = new Vector3(0, 0.1f, 0);
         plane.GetComponent<Renderer>().material.shader = Shader.Find("Transparent/Diffuse");
 
         if (Application.platform == RuntimePlatform.Android)
@@ -135,8 +137,8 @@ public class gameHandler : MonoBehaviour
                         islandPart.transform.SetParent(IslandParts.transform);
                         AllIslandParts.Add(islandPart);
                         //TODO REMOVE
-                        if  (i == 2)
-                        testIslandToWalkTo = islandPart;
+                        if (i == 2)
+                            testIslandToWalkTo = islandPart;
                     }
                     else //even
                     {
@@ -151,7 +153,155 @@ public class gameHandler : MonoBehaviour
             linenumber++;
         }
 
+        List<float> distances = new List<float>();
+
+        foreach (GameObject island in AllIslandParts)
+        {
+            foreach (GameObject island2 in AllIslandParts)
+            {
+                float distance = Vector3.Distance(island.transform.position, island2.transform.position);
+                if (island != island2)
+                {
+                    distances.Add(distance);
+                }
+            }
+        }
+
+        float[] arrdistances = new float[distances.Count];
+
+        for (int i = 0; i < arrdistances.Length; i++)
+        {
+            arrdistances[i] = distances[i];
+        }
+
+        float adjacentDistance = Mathf.Min(arrdistances) + 0.1f;
+
+        foreach (GameObject island in AllIslandParts)
+        {
+            foreach (GameObject island2 in AllIslandParts)
+            {
+                float distance = Vector3.Distance(island.transform.position, island2.transform.position);
+                if (distance <= adjacentDistance && island != island2)
+                {
+                    island.GetComponent<IslandPart>().AddAdjacentPart(island2);
+                }
+            }
+        }
+
         StartCoroutine(TryoutBuilderWalk());
+
+        //pathfinding
+
+
+        islandCoords = new List<Point>();
+
+        foreach (GameObject island in AllIslandParts)
+        {
+            Point islandToPoint = new Point();
+
+            islandToPoint.x = island.transform.position.x;
+            islandToPoint.y = island.transform.position.z;
+
+            List<Vector2> neighbourPos = new List<Vector2>();
+
+            foreach (GameObject neighisland in island.GetComponent<IslandPart>().GetAdjacentParts())
+            {
+                neighbourPos.Add(new Vector2(neighisland.transform.position.x, neighisland.transform.position.z));
+            }
+
+            islandToPoint.positions = neighbourPos;
+
+            islandCoords.Add(islandToPoint);
+        }
+
+        int startind = Random.Range(0, islandCoords.Count - 1); Debug.Log("start: " + startind);
+        int endind = Random.Range(0, islandCoords.Count - 1); Debug.Log("end: " + endind);
+        PathFinding.startPoint = new Vector2(islandCoords[startind].x, islandCoords[startind].y);
+        PathFinding.endPoint = new Vector2(islandCoords[endind].x, islandCoords[endind].y);
+
+        foreach (Point islandPoint in islandCoords)
+        {
+            islandPoint.Gcost = PathFinding.Gcost(islandPoint);
+            islandPoint.Hcost = PathFinding.Hcost(islandPoint);
+            islandPoint.Fcost = PathFinding.Fcost(islandPoint);
+            foreach (Point compareisland in islandCoords)
+            {
+                if (islandPoint != compareisland)
+                {
+                    foreach (Vector2 neighPos in islandPoint.positions)
+                    {
+                        if (compareisland.x == neighPos.x && compareisland.y == neighPos.y)
+                        {
+                            islandPoint.neighbours.Add(compareisland);
+                        }
+                    }
+                }
+            }
+        }
+
+        Path patje = PathFinding.findPath(islandCoords);
+
+        PathFinding.GetStartIsland(AllIslandParts).GetComponent<Renderer>().material.color = new Color(0.3f, 0.9f, 0.5f);
+        PathFinding.GetEndIsland(AllIslandParts).GetComponent<Renderer>().material.color = new Color(0.6f, 0.1f, 0.3f);
+
+        foreach (GameObject isleC in AllIslandParts)
+        {
+            foreach (Point p in patje.getPath())
+            {
+                if (p.x == isleC.transform.position.x && p.y == isleC.transform.position.z)
+                {
+                    isleC.GetComponent<Renderer>().material.color = new Color(0.5f, 0.1f, 0.5f);
+                    Debug.Log(p.x + " , " + p.y);
+                }
+            }
+        }
+
+       StartCoroutine(randompaths());
+    }
+
+    IEnumerator randompaths()
+    {
+        yield return new WaitForSeconds(1);
+        PathFinding.listmap = new Path();
+        int startind = Random.Range(0, islandCoords.Count - 1); Debug.Log("start: " + startind);
+        int endind = Random.Range(0, islandCoords.Count - 1); Debug.Log("end: " + endind);
+        PathFinding.startPoint = new Vector2(islandCoords[startind].x, islandCoords[startind].y);
+        PathFinding.endPoint = new Vector2(islandCoords[endind].x, islandCoords[endind].y);
+
+        foreach (Point p in islandCoords)
+        {
+            p.Gcost = PathFinding.Gcost(p);
+            p.Hcost = PathFinding.Hcost(p);
+            p.Fcost = PathFinding.Fcost(p);
+            p.positions = null;
+            p.parent = null;
+        }
+
+        foreach (GameObject g in AllIslandParts)
+        {
+            g.GetComponent<Renderer>().material.color = Color.gray;
+
+        }
+
+        yield return new WaitForSeconds(1);
+        Path patje = PathFinding.findPath(islandCoords);
+
+        PathFinding.GetStartIsland(AllIslandParts).GetComponent<Renderer>().material.color = new Color(0.3f, 0.9f, 0.5f);
+        PathFinding.GetEndIsland(AllIslandParts).GetComponent<Renderer>().material.color = new Color(0.6f, 0.1f, 0.3f);
+
+        foreach (GameObject isleC in AllIslandParts)
+        {
+            foreach (Point p in patje.getPath())
+            {
+                if (p.x == isleC.transform.position.x && p.y == isleC.transform.position.z)
+                {
+                    isleC.GetComponent<Renderer>().material.color = new Color(0.5f, 0.1f, 0.5f);
+                    Debug.Log(p.x + " , " + p.y);
+                }
+            }
+        }
+
+        StartCoroutine(randompaths());
     }
 
     float startTime = 0;
@@ -310,14 +460,26 @@ public class gameHandler : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             //draw invisible ray cast/vector
-            // Debug.DrawLine(ray.origin, hit.point);
-            if (hit.collider.transform.tag == "island")
+            //Debug.DrawLine(ray.origin, hit.point);
+            if (Input.GetMouseButton(0))
             {
-                GameObject child = hit.collider.transform.parent.FindChild("Cylinder").gameObject;
-                if (child != null)
+                if (hit.collider.transform.tag == "island")
                 {
-                    child.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
-                    lastHover = child;
+                    GameObject parent = hit.collider.transform.parent.gameObject;
+                    if (lastHover != parent)
+                    {
+                        if (parent != null)
+                        {
+                            Debug.DrawLine(ray.origin, hit.point, Color.red);
+                            parent.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+                            lastHover = parent;
+                            Color othercol = new Color(0.5f, 1, 0.5f, 1);
+                            foreach (GameObject item in parent.GetComponent<IslandPart>().GetAdjacentParts())
+                            {
+                                item.GetComponent<Renderer>().material.color = othercol;
+                            }
+                        }
+                    }
                 }
             }
 
