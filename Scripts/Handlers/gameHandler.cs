@@ -62,6 +62,7 @@ public class gameHandler : MonoBehaviour
 
     GameObject testIslandToWalkTo = null;
     GameObject testBuilder = null;
+    GameObject testBuilderIcon = null;
 
     List<Point> islandCoords = new List<Point>();
 
@@ -121,7 +122,11 @@ public class gameHandler : MonoBehaviour
                     verticleDistance = startRenderer.bounds.size.z / 1.35f;
                     islandPart.transform.position += new Vector3(horizontalDistance * -0.5f, 0, 0);
                     islandPart.transform.SetParent(IslandParts.transform);
-                    testBuilder = (GameObject)Instantiate((GameObject)Resources.Load("Prefabs/testPrefabs/Civilian") as GameObject, new Vector3(islandPart.transform.position.x, islandPart.transform.position.y + 1f, islandPart.transform.position.z), Quaternion.identity);
+                    testBuilder = (GameObject)Instantiate((GameObject)Resources.Load("Prefabs/testPrefabs/Civilian") as GameObject, new Vector3(islandPart.transform.position.x, islandPart.transform.position.y + 2f, islandPart.transform.position.z), Quaternion.identity);
+                    GameObject canvas = GameObject.Find("Canvas");
+                    testBuilderIcon = (GameObject)Instantiate((GameObject)Resources.Load("Prefabs/UI/BuilderLocator"));
+                    testBuilderIcon.transform.SetParent(canvas.transform);
+                    testBuilderIcon.transform.position = Camera.main.WorldToScreenPoint(testBuilder.transform.position);
                     AllIslandParts.Add(islandPart);
                 }
                 else
@@ -256,7 +261,7 @@ public class gameHandler : MonoBehaviour
             }
         }
 
-       StartCoroutine(randompaths());
+       //StartCoroutine(randompaths());
     }
 
     IEnumerator randompaths()
@@ -305,7 +310,7 @@ public class gameHandler : MonoBehaviour
     }
 
     float startTime = 0;
-    float speed = 1f;
+    float speed = 0.2f;
     float journeyLength = 0;
     bool walking = false;
     Vector3 builderStartPos = new Vector3();
@@ -348,10 +353,14 @@ public class gameHandler : MonoBehaviour
             RaycastHit objectHit = new RaycastHit();
             if (Physics.Raycast(testBuilder.transform.position, down, out objectHit))
             {
-                testBuilder.transform.position = new Vector3(newBpos.x, objectHit.point.y + 0.01f, newBpos.z);
+                testBuilder.transform.position = new Vector3(newBpos.x, objectHit.point.y + 0.03f, newBpos.z);
         }
 
-            if (fracJourney < 1)
+        Vector3 iconPos = Camera.main.WorldToScreenPoint(testBuilder.transform.position);
+        iconPos += new Vector3(0, 50, 0);
+        testBuilderIcon.transform.position = iconPos;
+
+        if (fracJourney < 1)
         {
             StartCoroutine(TryoutBuilderWalk());
         }
@@ -390,7 +399,8 @@ public class gameHandler : MonoBehaviour
 
     Vector3 lastPos = new Vector3();
     float mouseSensitivity = 0.5f;
-    GameObject lastHover = null;
+    GameObject selectedIsle = null;
+    Color originColor = new Color();
 
     // Update is called once per frame
     void Update()
@@ -455,29 +465,37 @@ public class gameHandler : MonoBehaviour
         }
 
         //mouse / touch raycast
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Input.GetMouseButton(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
             //draw invisible ray cast/vector
             //Debug.DrawLine(ray.origin, hit.point);
-            if (Input.GetMouseButton(0))
-            {
+
                 if (hit.collider.transform.tag == "island")
                 {
                     GameObject parent = hit.collider.transform.parent.gameObject;
-                    if (lastHover != parent)
+                    if (selectedIsle != parent)
                     {
                         if (parent != null)
                         {
-                            Debug.DrawLine(ray.origin, hit.point, Color.red);
-                            parent.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
-                            lastHover = parent;
-                            Color othercol = new Color(0.5f, 1, 0.5f, 1);
-                            foreach (GameObject item in parent.GetComponent<IslandPart>().GetAdjacentParts())
+                            //Debug.DrawLine(ray.origin, hit.point, Color.red);
+                            if (selectedIsle != null)
                             {
-                                item.GetComponent<Renderer>().material.color = othercol;
+                                selectedIsle.GetComponent<Renderer>().material.color = originColor;
                             }
+                            selectedIsle = parent;
+                            originColor = parent.GetComponent<Renderer>().material.color;
+                            parent.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 0.4f, 0.5f);
+                            //lastHover = parent;
+                            //Color othercol = new Color(0.5f, 1, 0.5f, 1);
+                            //foreach (GameObject item in parent.GetComponent<IslandPart>().GetAdjacentParts())
+                            //{
+                            //    item.GetComponent<Renderer>().material.color = othercol;
+                            //}
+
                         }
                     }
                 }
