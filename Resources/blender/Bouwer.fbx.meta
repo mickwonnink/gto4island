@@ -6,9 +6,45 @@ ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Armature
+    100004: ArmLDown
+    100006: ArmLDown_end
+    100008: ArmLUp
+    100010: ArmRDown
+    100012: ArmRDown_end
+    100014: ArmRUp
+    100016: Cube
+    100018: Head
+    100020: Head_end
+    100022: LegLDown
+    100024: LegLDown_end
+    100026: LegLUp
+    100028: LegRDown
+    100030: LegRDown_end
+    100032: LegRUp
+    100034: Spine
     400000: //RootNode
+    400002: Armature
+    400004: ArmLDown
+    400006: ArmLDown_end
+    400008: ArmLUp
+    400010: ArmRDown
+    400012: ArmRDown_end
+    400014: ArmRUp
+    400016: Cube
+    400018: Head
+    400020: Head_end
+    400022: LegLDown
+    400024: LegLDown_end
+    400026: LegLUp
+    400028: LegRDown
+    400030: LegRDown_end
+    400032: LegRUp
+    400034: Spine
     2300000: //RootNode
+    2300002: Cube
     3300000: //RootNode
+    3300002: Cube
     4300000: Cube
   materials:
     importMaterials: 1

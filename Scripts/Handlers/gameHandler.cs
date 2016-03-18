@@ -336,24 +336,32 @@ public class gameHandler : MonoBehaviour
 
             //rotate us over time according to speed until we are in the required rotation
             testBuilder.transform.rotation = _lookRotation;
-            testBuilder.GetComponent<Animator>().SetBool("isWalking", true);
+            //testBuilder.GetComponent<Animator>().SetBool("isWalking", true);
 
             walking = true;
 
         }
         yield return new WaitForSeconds(0.01f);
 
-            float distCovered = (Time.time - startTime) * speed;
-            float fracJourney = distCovered / journeyLength;
-            Vector3 newBpos = Vector3.Lerp(builderStartPos, testIslandToWalkTo.transform.position, fracJourney);
+        float distCovered = (Time.time - startTime) * speed;
+        float fracJourney = distCovered / journeyLength;
+        Vector3 newBpos = Vector3.Lerp(builderStartPos, testIslandToWalkTo.transform.position, fracJourney);
 
 
-            Vector3 down = testBuilder.transform.TransformDirection(Vector3.down);
-            //Debug.DrawRay(testBuilder.transform.position, down * 50, Color.green);
-            RaycastHit objectHit = new RaycastHit();
-            if (Physics.Raycast(testBuilder.transform.position, down, out objectHit))
-            {
-                testBuilder.transform.position = new Vector3(newBpos.x, objectHit.point.y + 0.03f, newBpos.z);
+        Vector3 down = testBuilder.transform.TransformDirection(Vector3.down);
+        Vector3 up = testBuilder.transform.TransformDirection(Vector3.up);
+        Debug.DrawRay(testBuilder.transform.position, up * 50, Color.green);
+        RaycastHit objectHitD = new RaycastHit(); //down
+        RaycastHit objectHitU = new RaycastHit(); //up
+
+
+        if (Physics.Raycast(testBuilder.transform.position, up, out objectHitU))
+        {
+            testBuilder.transform.position = new Vector3(newBpos.x, objectHitU.point.y + 0.05f, newBpos.z);
+        }
+        else if (Physics.Raycast(testBuilder.transform.position, down, out objectHitD))
+        {
+            testBuilder.transform.position = new Vector3(newBpos.x, objectHitD.point.y + 0.05f, newBpos.z);
         }
 
         Vector3 iconPos = Camera.main.WorldToScreenPoint(testBuilder.transform.position);
@@ -366,7 +374,7 @@ public class gameHandler : MonoBehaviour
         }
         else
         {
-            testBuilder.GetComponent<Animator>().SetBool("isWalking", false);
+            //testBuilder.GetComponent<Animator>().SetBool("isWalking", false);
             builderStartPos = testBuilder.transform.position;
             testIslandToWalkTo = AllIslandParts[Random.Range(0, AllIslandParts.Count)];
             startTime = Time.time;
