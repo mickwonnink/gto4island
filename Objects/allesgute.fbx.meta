@@ -1,0 +1,223 @@
+fileFormatVersion: 2
+guid: 396ea3de62469b54bbc8542c04e41cf2
+timeCreated: 1459354553
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: ArmLdown
+    100004: ArmLdown_end
+    100006: ArmLup
+    100008: ArmRdown
+    100010: ArmRdown_end
+    100012: ArmRup
+    100014: Bird
+    100016: Bird Armature
+    100018: Crab
+    100020: Cube.001
+    100022: Cylinder.032
+    100024: Fire fire
+    100026: Fire wood
+    100028: Head
+    100030: Head 1
+    100032: Head 2
+    100034: Head_end
+    100036: Head_end 1
+    100038: Head_end 2
+    100040: Horse
+    100042: Horse Armature
+    100044: Icosphere.009
+    100046: LegLdown
+    100048: LegLdown_end
+    100050: LegLup
+    100052: LegRdown
+    100054: LegRdown_end
+    100056: LegRup
+    100058: Logs1
+    100060: Logs2
+    100062: Logs3
+    100064: Neck
+    100066: Shark
+    100068: Shark Armature
+    100070: Spine
+    100072: Spine 1
+    100074: Spine1
+    100076: spine1
+    100078: Spine2
+    100080: Spine2 1
+    100082: Spine3
+    100084: Spine3 1
+    100086: Spine4
+    100088: Spine_end
+    100090: Tail
+    100092: Tail 1
+    100094: Tail_end
+    100096: Tail_end 1
+    100098: Wagon
+    100100: Whale
+    100102: Whale Armature
+    100104: WingL
+    100106: WingL_end
+    100108: WingR
+    100110: WingR_end
+    400000: //RootNode
+    400002: ArmLdown
+    400004: ArmLdown_end
+    400006: ArmLup
+    400008: ArmRdown
+    400010: ArmRdown_end
+    400012: ArmRup
+    400014: Bird
+    400016: Bird Armature
+    400018: Crab
+    400020: Cube.001
+    400022: Cylinder.032
+    400024: Fire fire
+    400026: Fire wood
+    400028: Head
+    400030: Head 1
+    400032: Head 2
+    400034: Head_end
+    400036: Head_end 1
+    400038: Head_end 2
+    400040: Horse
+    400042: Horse Armature
+    400044: Icosphere.009
+    400046: LegLdown
+    400048: LegLdown_end
+    400050: LegLup
+    400052: LegRdown
+    400054: LegRdown_end
+    400056: LegRup
+    400058: Logs1
+    400060: Logs2
+    400062: Logs3
+    400064: Neck
+    400066: Shark
+    400068: Shark Armature
+    400070: Spine
+    400072: Spine 1
+    400074: Spine1
+    400076: spine1
+    400078: Spine2
+    400080: Spine2 1
+    400082: Spine3
+    400084: Spine3 1
+    400086: Spine4
+    400088: Spine_end
+    400090: Tail
+    400092: Tail 1
+    400094: Tail_end
+    400096: Tail_end 1
+    400098: Wagon
+    400100: Whale
+    400102: Whale Armature
+    400104: WingL
+    400106: WingL_end
+    400108: WingR
+    400110: WingR_end
+    2300000: Bird
+    2300002: Crab
+    2300004: Cube.001
+    2300006: Cylinder.032
+    2300008: Fire fire
+    2300010: Fire wood
+    2300012: Icosphere.009
+    2300014: Logs1
+    2300016: Logs2
+    2300018: Logs3
+    2300020: Wagon
+    3300000: Bird
+    3300002: Crab
+    3300004: Cube.001
+    3300006: Cylinder.032
+    3300008: Fire fire
+    3300010: Fire wood
+    3300012: Icosphere.009
+    3300014: Logs1
+    3300016: Logs2
+    3300018: Logs3
+    3300020: Wagon
+    4300000: Logs3
+    4300002: Logs2
+    4300004: Logs1
+    4300006: Shark
+    4300008: Whale
+    4300010: Horse
+    4300012: Crab
+    4300014: Bird
+    4300016: Wagon
+    4300018: Fire wood
+    4300020: Fire fire
+    4300022: Icosphere.009
+    4300024: Cube.001
+    4300026: Cylinder.032
+    9500000: //RootNode
+    13700000: Horse
+    13700002: Shark
+    13700004: Whale
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
