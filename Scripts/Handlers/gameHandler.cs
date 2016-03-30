@@ -351,6 +351,7 @@ public class gameHandler : MonoBehaviour
         Vector3 down = testBuilder.transform.TransformDirection(Vector3.down);
         Vector3 up = testBuilder.transform.TransformDirection(Vector3.up);
         Debug.DrawRay(testBuilder.transform.position, up * 50, Color.green);
+        Debug.DrawRay(testBuilder.transform.position, down * 50, Color.red);
         RaycastHit objectHitD = new RaycastHit(); //down
         RaycastHit objectHitU = new RaycastHit(); //up
 
