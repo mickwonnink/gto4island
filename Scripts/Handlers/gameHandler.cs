@@ -6,8 +6,8 @@ using System.Collections.Generic;
 public enum IslandTypes
 {
     
-    forestLand,
-    hillLand
+    Forest,
+    Hillside
     //swamp
 }
 
@@ -95,11 +95,11 @@ public class gameHandler : MonoBehaviour
         {
             IslandTypes Name = (IslandTypes)name;
             string touse = Name.ToString();
-            islandParts.Add((GameObject)Resources.Load("Prefabs/IslandParts/" + touse) as GameObject);
+            islandParts.Add((GameObject)Resources.Load("Prefabs/IslandHexaParts/" + touse) as GameObject);
         }
 
         //island prefabs
-        GameObject beachLand = (GameObject)Resources.Load("Prefabs/IslandParts/beachLand") as GameObject;
+        GameObject beachLand = (GameObject)Resources.Load("Prefabs/IslandHexaParts/Beach") as GameObject;
 
 
         System.Array landgrid = System.Enum.GetValues(typeof(GridLines));
@@ -116,10 +116,10 @@ public class gameHandler : MonoBehaviour
             {
                 if (linenumber == 0 && i == 0)
                 {
-                    GameObject islandPart = (GameObject)Instantiate(beachLand, new Vector3(0, 0, 0), Quaternion.Euler(-90, 0, 0));
-                    MeshCollider startRenderer = islandPart.transform.FindChild("hexacollider").GetComponent<MeshCollider>();
-                    horizontalDistance = startRenderer.bounds.size.x;
-                    verticleDistance = startRenderer.bounds.size.z / 1.35f;
+                    GameObject islandPart = (GameObject)Instantiate(beachLand, new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0)));
+                    MeshCollider startRenderer = islandPart.transform.FindChild("correction").FindChild("hexacollider").GetComponent<MeshCollider>();
+                    horizontalDistance = startRenderer.bounds.size.x * 0.97f;
+                    verticleDistance = startRenderer.bounds.size.z / 1.34f;
                     islandPart.transform.position += new Vector3(horizontalDistance * -0.5f, 0, 0);
                     islandPart.transform.SetParent(IslandParts.transform);
                     testBuilder = (GameObject)Instantiate((GameObject)Resources.Load("Prefabs/testPrefabs/Civilian") as GameObject, new Vector3(islandPart.transform.position.x, islandPart.transform.position.y + 2f, islandPart.transform.position.z), Quaternion.identity);
@@ -133,7 +133,7 @@ public class gameHandler : MonoBehaviour
                 {
                     GameObject rdnIsland = islandParts[Random.Range(0, islandParts.Count)]; //choose random island
                     int rdnRotation = possibleRot[Random.Range(0, possibleRot.Length)]; //random rotation
-                    Quaternion rdnRotationQ = Quaternion.Euler(new Vector3(270, rdnRotation, 0));
+                    Quaternion rdnRotationQ = Quaternion.Euler(new Vector3(0, rdnRotation, 0));
 
                     if (linenumber % 2 != 0) //is the number odd
                     {
@@ -246,8 +246,8 @@ public class gameHandler : MonoBehaviour
 
         Path patje = PathFinding.findPath(islandCoords);
 
-        PathFinding.GetStartIsland(AllIslandParts).GetComponent<Renderer>().material.color = new Color(0.3f, 0.9f, 0.5f);
-        PathFinding.GetEndIsland(AllIslandParts).GetComponent<Renderer>().material.color = new Color(0.6f, 0.1f, 0.3f);
+        PathFinding.GetStartIsland(AllIslandParts).transform.FindChild("correction").FindChild("hexacollider").GetComponent<Renderer>().material.color = new Color(0.3f, 0.9f, 0.5f);
+        PathFinding.GetEndIsland(AllIslandParts).transform.FindChild("correction").FindChild("hexacollider").GetComponent<Renderer>().material.color = new Color(0.6f, 0.1f, 0.3f);
 
         foreach (GameObject isleC in AllIslandParts)
         {
@@ -255,7 +255,7 @@ public class gameHandler : MonoBehaviour
             {
                 if (p.x == isleC.transform.position.x && p.y == isleC.transform.position.z)
                 {
-                    isleC.GetComponent<Renderer>().material.color = new Color(0.5f, 0.1f, 0.5f);
+                    isleC.transform.FindChild("correction").FindChild("hexacollider").GetComponent<Renderer>().material.color = new Color(0.5f, 0.1f, 0.5f);
                     Debug.Log(p.x + " , " + p.y);
                 }
             }
@@ -407,7 +407,7 @@ public class gameHandler : MonoBehaviour
     }
 
     Vector3 lastPos = new Vector3();
-    float mouseSensitivity = 0.5f;
+    float mouseSensitivity = 1f;
     GameObject selectedIsle = null;
     Color originColor = new Color();
 
@@ -444,7 +444,7 @@ public class gameHandler : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
             Vector3 deltam = Input.mousePosition - lastPos;
-            deltam *= -Mathf.Lerp(0.004f, 0.03f, Mathf.InverseLerp(minViewSize, maxViewSize, Camera.main.fieldOfView));
+            deltam *= -0.5f; //-Mathf.Lerp(0.004f, 0.03f, Mathf.InverseLerp(minViewSize, maxViewSize, Camera.main.fieldOfView));
             Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x + (deltam.x * mouseSensitivity), Camera.main.transform.localPosition.y, Camera.main.transform.localPosition.z + (deltam.y * mouseSensitivity));
             lastPos = Input.mousePosition;
         }
@@ -463,7 +463,7 @@ public class gameHandler : MonoBehaviour
                 if (Input.GetTouch(0).phase == TouchPhase.Moved)
                 {
                     Vector3 deltam = (Vector3)Input.GetTouch(0).position - lastPos;
-                    deltam *= -Mathf.Lerp(0.004f, 0.03f, Mathf.InverseLerp(minViewSize, maxViewSize, Camera.main.fieldOfView));
+                    deltam *= -0.5f; //Mathf.Lerp(0.1f, 0.3f, Mathf.InverseLerp(minViewSize, maxViewSize, Camera.main.fieldOfView));
                     Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x + (deltam.x * mouseSensitivity), Camera.main.transform.localPosition.y, Camera.main.transform.localPosition.z + (deltam.y * mouseSensitivity));
                     lastPos = Input.GetTouch(0).position;
                 }
