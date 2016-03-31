@@ -15,10 +15,10 @@ public enum IslandTypes
 public enum GridLines
 {
     line1 = 4,
-    line2 = 5,
+    line2 = 4,
     line3 = 6,
-    line4 = 5,
-    line5 = 4
+    line4 = 7,
+    line5 = 3
 }
 
 public class gameHandler : MonoBehaviour
@@ -118,10 +118,10 @@ public class gameHandler : MonoBehaviour
                 {
                     GameObject islandPart = (GameObject)Instantiate(beachLand, new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0)));
                     MeshCollider startRenderer = islandPart.transform.FindChild("correction").FindChild("hexacollider").GetComponent<MeshCollider>();
-                    horizontalDistance = startRenderer.bounds.size.x * 0.97f;
-                    verticleDistance = startRenderer.bounds.size.z / 1.34f;
-                    islandPart.transform.position += new Vector3(horizontalDistance * -0.5f, 0, 0);
                     islandPart.transform.SetParent(IslandParts.transform);
+                    horizontalDistance = (int)(startRenderer.bounds.size.x * 0.97f);
+                    verticleDistance = (int)(startRenderer.bounds.size.z / 1.34f);
+                    islandPart.transform.position += new Vector3((int)(horizontalDistance * -0.5f), 0, 0);
                     testBuilder = (GameObject)Instantiate((GameObject)Resources.Load("Prefabs/testPrefabs/Civilian") as GameObject, new Vector3(islandPart.transform.position.x, islandPart.transform.position.y + 2f, islandPart.transform.position.z), Quaternion.identity);
                     GameObject canvas = GameObject.Find("Canvas");
                     testBuilderIcon = (GameObject)Instantiate((GameObject)Resources.Load("Prefabs/UI/BuilderLocator"));
@@ -137,7 +137,7 @@ public class gameHandler : MonoBehaviour
 
                     if (linenumber % 2 != 0) //is the number odd
                     {
-                        Vector3 spawnPosition = new Vector3(-(horizontalDistance * i), 0, linenumber * verticleDistance);
+                        Vector3 spawnPosition = new Vector3((int)(-(horizontalDistance * i)), 0, (int)(linenumber * verticleDistance));
                         GameObject islandPart = (GameObject)Instantiate(rdnIsland, spawnPosition, rdnRotationQ);
                         islandPart.transform.SetParent(IslandParts.transform);
                         AllIslandParts.Add(islandPart);
@@ -147,7 +147,7 @@ public class gameHandler : MonoBehaviour
                     }
                     else //even
                     {
-                        Vector3 spawnPosition = new Vector3(-(horizontalDistance * 0.5f) - (horizontalDistance * i), 0, linenumber * verticleDistance);
+                        Vector3 spawnPosition = new Vector3((int)(-(horizontalDistance * 0.5f) - (horizontalDistance * i)), 0, (int)(linenumber * verticleDistance));
                         GameObject islandPart = (GameObject)Instantiate(rdnIsland, spawnPosition, rdnRotationQ);
                         islandPart.transform.SetParent(IslandParts.transform);
                         AllIslandParts.Add(islandPart);
@@ -179,7 +179,7 @@ public class gameHandler : MonoBehaviour
             arrdistances[i] = distances[i];
         }
 
-        float adjacentDistance = Mathf.Min(arrdistances) + 0.1f;
+        float adjacentDistance = Mathf.Min(arrdistances) + 10f;
 
         foreach (GameObject island in AllIslandParts)
         {
@@ -477,15 +477,16 @@ public class gameHandler : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Debug.DrawRay(ray.origin, ray.direction);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
+                Debug.Log("hit");
             //draw invisible ray cast/vector
             //Debug.DrawLine(ray.origin, hit.point);
-
-                if (hit.collider.transform.tag == "island")
-                {
-                    GameObject parent = hit.collider.transform.parent.gameObject;
+            if (hit.collider.transform.gameObject.tag == "island") {
+                    Debug.Log("with islandpart!");
+                    GameObject parent = hit.collider.transform.gameObject;
                     if (selectedIsle != parent)
                     {
                         if (parent != null)
@@ -498,15 +499,19 @@ public class gameHandler : MonoBehaviour
                             selectedIsle = parent;
                             originColor = parent.GetComponent<Renderer>().material.color;
                             parent.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 0.4f, 0.5f);
-                            //lastHover = parent;
-                            //Color othercol = new Color(0.5f, 1, 0.5f, 1);
-                            //foreach (GameObject item in parent.GetComponent<IslandPart>().GetAdjacentParts())
-                            //{
-                            //    item.GetComponent<Renderer>().material.color = othercol;
-                            //}
+
+                            Color othercol = new Color(0.5f, 1, 0.5f, 1);
+                            foreach (GameObject item in parent.transform.parent.transform.parent.GetComponent<IslandPart>().GetAdjacentParts())
+                            {
+                                item.transform.FindChild("correction").FindChild("hexacollider").GetComponent<Renderer>().material.color = othercol;
+                            }
 
                         }
                     }
+                }
+                else
+                {
+                    Debug.Log("with : " + hit.collider.gameObject.name);
                 }
             }
 

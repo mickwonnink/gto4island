@@ -31,7 +31,7 @@ public static class PathFinding {
             foreach (Point p in openPoints)
             {
                 if (current.Fcost <= 0) {
-                    current = p;             
+                    current = p;     
                 }
                 else
                 {
@@ -76,8 +76,12 @@ public static class PathFinding {
                 }
             }
 
-            if (foundPath)
+            if (foundPath || closedPoints.Count > islandsGrid.Count)
             {
+                if (closedPoints.Count > islandsGrid.Count)
+                {
+                    Debug.Log("error");
+                }
                 break;
             }
         }
@@ -116,7 +120,7 @@ public static class PathFinding {
 
     public static int Fcost(Point point)
     {
-        return (int)point.Fcost + point.Gcost;
+        return (point.Fcost + point.Gcost);
     }
 
     public static GameObject GetStartIsland(List<GameObject> islandparts)
