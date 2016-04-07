@@ -61,6 +61,17 @@ ModelImporter:
     100106: Beach
     100108: Forest
     100110: Mine
+    100112: Bench
+    100114: Bench2
+    100116: Chair
+    100118: Cube
+    100120: Cube_002
+    100122: Flag
+    100124: PalmTree
+    100126: Pole
+    100128: Table
+    100130: Tree1
+    100132: WhaleRotten
     400000: //RootNode
     400002: ArmLdown
     400004: ArmLup
@@ -117,6 +128,17 @@ ModelImporter:
     400106: Beach
     400108: Forest
     400110: Mine
+    400112: Bench
+    400114: Bench2
+    400116: Chair
+    400118: Cube
+    400120: Cube_002
+    400122: Flag
+    400124: PalmTree
+    400126: Pole
+    400128: Table
+    400130: Tree1
+    400132: WhaleRotten
     2300000: Bird
     2300002: Crab
     2300004: Cube_001
@@ -140,6 +162,17 @@ ModelImporter:
     2300040: Beach
     2300042: Forest
     2300044: Mine
+    2300046: Bench
+    2300048: Bench2
+    2300050: Chair
+    2300052: Cube
+    2300054: Cube_002
+    2300056: Flag
+    2300058: PalmTree
+    2300060: Pole
+    2300062: Table
+    2300064: Tree1
+    2300066: WhaleRotten
     3300000: Bird
     3300002: Crab
     3300004: Cube_001
@@ -163,6 +196,17 @@ ModelImporter:
     3300040: Beach
     3300042: Forest
     3300044: Mine
+    3300046: Bench
+    3300048: Bench2
+    3300050: Chair
+    3300052: Cube
+    3300054: Cube_002
+    3300056: Flag
+    3300058: PalmTree
+    3300060: Pole
+    3300062: Table
+    3300064: Tree1
+    3300066: WhaleRotten
     4300000: Logs3
     4300002: Logs2
     4300004: Logs1
@@ -189,6 +233,17 @@ ModelImporter:
     4300046: Beach
     4300048: Mine
     4300050: Forest
+    4300052: Pole
+    4300054: Bench2
+    4300056: Chair
+    4300058: Flag
+    4300060: Table
+    4300062: Bench
+    4300064: WhaleRotten
+    4300066: Tree1
+    4300068: PalmTree
+    4300070: Cube
+    4300072: Cube_002
     7400000: Default Take
     9500000: //RootNode
     13700000: Horse

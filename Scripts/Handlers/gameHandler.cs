@@ -48,9 +48,9 @@ public class gameHandler : MonoBehaviour
     List<GameObject> AllIslandParts;
 
     //settings
-    float maxViewSize = 50;
+    float maxViewSize = 75;
     float minViewSize = 10;
-    float zoomSpeed = 15;
+    float zoomSpeed = 30;
     float yStartPos = 0;
     float cameraHeight = 5;
 
@@ -246,8 +246,15 @@ public class gameHandler : MonoBehaviour
 
         Path patje = PathFinding.findPath(islandCoords);
 
-        PathFinding.GetStartIsland(AllIslandParts).transform.FindChild("correction").FindChild("hexacollider").GetComponent<Renderer>().material.color = new Color(0.3f, 0.9f, 0.5f);
-        PathFinding.GetEndIsland(AllIslandParts).transform.FindChild("correction").FindChild("hexacollider").GetComponent<Renderer>().material.color = new Color(0.6f, 0.1f, 0.3f);
+        
+        foreach (Material m in PathFinding.GetStartIsland(AllIslandParts).transform.FindChild("correction").FindChild("hexacollider").GetComponent<Renderer>().materials)
+        {
+            m.color = new Color(0.5f, 0.1f, 0.5f);
+        }
+        foreach (Material m in PathFinding.GetEndIsland(AllIslandParts).transform.FindChild("correction").FindChild("hexacollider").GetComponent<Renderer>().materials)
+        {
+            m.color = new Color(0.5f, 0.1f, 0.5f);
+        }
 
         foreach (GameObject isleC in AllIslandParts)
         {
@@ -256,6 +263,10 @@ public class gameHandler : MonoBehaviour
                 if (p.x == isleC.transform.position.x && p.y == isleC.transform.position.z)
                 {
                     isleC.transform.FindChild("correction").FindChild("hexacollider").GetComponent<Renderer>().material.color = new Color(0.5f, 0.1f, 0.5f);
+                    foreach (Material m in isleC.transform.FindChild("correction").FindChild("hexacollider").GetComponent<Renderer>().materials)
+                    {
+                        m.color = new Color(0.5f, 0.1f, 0.5f);
+                    }
                     Debug.Log(p.x + " , " + p.y);
                 }
             }
@@ -301,6 +312,11 @@ public class gameHandler : MonoBehaviour
                 if (p.x == isleC.transform.position.x && p.y == isleC.transform.position.z)
                 {
                     isleC.GetComponent<Renderer>().material.color = new Color(0.5f, 0.1f, 0.5f);
+
+                    foreach (Material m in isleC.GetComponent<Renderer>().materials)
+                    {
+                        m.color = new Color(0.5f, 0.1f, 0.5f);
+                    }
                     Debug.Log(p.x + " , " + p.y);
                 }
             }
@@ -498,7 +514,13 @@ public class gameHandler : MonoBehaviour
                             }
                             selectedIsle = parent;
                             originColor = parent.GetComponent<Renderer>().material.color;
-                            parent.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 0.4f, 0.5f);
+                            
+
+                            foreach (Material m in parent.GetComponent<Renderer>().materials)
+                            {
+                                m.color = new Color(0.4f, 0.4f, 0.4f, 0.5f);
+                            }
+
 
                             Color othercol = new Color(0.5f, 1, 0.5f, 1);
                             foreach (GameObject item in parent.transform.parent.transform.parent.GetComponent<IslandPart>().GetAdjacentParts())
